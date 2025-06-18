@@ -298,6 +298,157 @@ let surveys = JSON.parse(localStorage.getItem('surveys')) || [];
 let currentSurvey = null;
 let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
+// Debug function
+function debug(message) {
+    console.log(`[DEBUG] ${message}`);
+}
+
+// Initialize demo data if no surveys exist
+function initializeDemoData() {
+    debug('Initializing demo data...');
+    if (surveys.length === 0) {
+        debug('No surveys found, creating demo data...');
+        const demoSurveys = [
+            {
+                id: 'demo1',
+                title: 'Customer Satisfaction Survey',
+                category: 'Customer Feedback',
+                description: 'Help us improve our service by sharing your experience',
+                color: '#2563eb',
+                fontSize: '16px',
+                borderRadius: '8px',
+                status: 'active',
+                createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                responses: [
+                    {
+                        id: 'resp1',
+                        timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                        answers: {
+                            'q1': 'Very satisfied',
+                            'q2': '9',
+                            'q3': 'The service was excellent and staff was friendly'
+                        }
+                    },
+                    {
+                        id: 'resp2',
+                        timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+                        answers: {
+                            'q1': 'Satisfied',
+                            'q2': '8',
+                            'q3': 'Good experience overall'
+                        }
+                    }
+                ],
+                questions: [
+                    {
+                        id: 'q1',
+                        type: 'radio',
+                        text: 'How satisfied are you with our service?',
+                        required: true,
+                        options: ['Very satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very dissatisfied']
+                    },
+                    {
+                        id: 'q2',
+                        type: 'rating',
+                        text: 'Rate your overall experience (1-10)',
+                        required: true,
+                        min: 1,
+                        max: 10
+                    },
+                    {
+                        id: 'q3',
+                        type: 'textarea',
+                        text: 'Please share any additional comments or suggestions',
+                        required: false
+                    }
+                ],
+                userId: 'demo'
+            },
+            {
+                id: 'demo2',
+                title: 'Product Feedback Form',
+                category: 'Product Feedback',
+                description: 'Tell us what you think about our latest product',
+                color: '#059669',
+                fontSize: '16px',
+                borderRadius: '8px',
+                status: 'active',
+                createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                responses: [
+                    {
+                        id: 'resp3',
+                        timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        answers: {
+                            'q1': 'Excellent',
+                            'q2': 'Yes',
+                            'q3': 'Great features and easy to use'
+                        }
+                    }
+                ],
+                questions: [
+                    {
+                        id: 'q1',
+                        type: 'radio',
+                        text: 'How would you rate our product?',
+                        required: true,
+                        options: ['Excellent', 'Good', 'Average', 'Poor', 'Very poor']
+                    },
+                    {
+                        id: 'q2',
+                        type: 'radio',
+                        text: 'Would you recommend this product to others?',
+                        required: true,
+                        options: ['Yes', 'No', 'Maybe']
+                    },
+                    {
+                        id: 'q3',
+                        type: 'textarea',
+                        text: 'What features would you like to see improved?',
+                        required: false
+                    }
+                ],
+                userId: 'demo'
+            },
+            {
+                id: 'demo3',
+                title: 'Employee Engagement Survey',
+                category: 'Employee Feedback',
+                description: 'Help us create a better workplace environment',
+                color: '#7c3aed',
+                fontSize: '16px',
+                borderRadius: '8px',
+                status: 'draft',
+                createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+                responses: [],
+                questions: [
+                    {
+                        id: 'q1',
+                        type: 'radio',
+                        text: 'How satisfied are you with your current role?',
+                        required: true,
+                        options: ['Very satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very dissatisfied']
+                    },
+                    {
+                        id: 'q2',
+                        type: 'rating',
+                        text: 'Rate your work-life balance (1-10)',
+                        required: true,
+                        min: 1,
+                        max: 10
+                    }
+                ],
+                userId: 'demo'
+            }
+        ];
+        
+        surveys = demoSurveys;
+        saveSurveys();
+        debug(`Created ${demoSurveys.length} demo surveys`);
+    } else {
+        debug(`Found ${surveys.length} existing surveys`);
+    }
+}
+
 // Utility functions
 function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
@@ -374,7 +525,7 @@ function signUp(event) {
         id: generateId(),
         name: name,
         email: email,
-        password: password, // In a real app, this would be hashed
+        password: password,
         createdAt: new Date().toISOString()
     };
     
@@ -427,7 +578,7 @@ function logout() {
     window.location.href = 'index.html';
 }
 
-// Survey creation functionality
+// Survey management functions
 function openCreateModal() {
     const modal = document.getElementById('createModal');
     if (modal) {
@@ -472,7 +623,8 @@ function createSurvey(event) {
         questions: [],
         status: 'draft',
         createdAt: new Date().toISOString(),
-        responses: []
+        responses: [],
+        userId: currentUser?.id || 'demo'
     };
     
     surveys.push(survey);
@@ -482,25 +634,30 @@ function createSurvey(event) {
     showNotification('Survey created successfully!');
     
     // Redirect to survey editor
-    window.location.href = `survey-editor.html?id=${survey.id}`;
+    setTimeout(() => {
+        window.location.href = `survey-editor.html?id=${survey.id}`;
+    }, 1000);
 }
 
 // QR Code generation
 function generateQRCode(text) {
-    // Using a simple QR code API (you can replace with a library like qrcode.js)
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}`;
     return qrUrl;
 }
 
 function viewQR(surveyId) {
+    debug(`Opening QR modal for survey: ${surveyId}`);
     const survey = surveys.find(s => s.id === surveyId);
     if (!survey) {
+        debug('Survey not found');
         showNotification('Survey not found', 'error');
         return;
     }
     
     const surveyUrl = `${window.location.origin}/survey.html?id=${survey.id}`;
     const qrCodeUrl = generateQRCode(surveyUrl);
+    
+    debug(`Generated QR code URL: ${qrCodeUrl}`);
     
     const modal = document.getElementById('qrModal');
     if (modal) {
@@ -514,23 +671,88 @@ function viewQR(surveyId) {
         }
         
         modal.classList.add('show');
+        debug('QR modal opened successfully');
+    } else {
+        debug('Could not find QR modal');
     }
 }
 
-// Survey management
-function loadSurveys() {
+function downloadQR() {
+    const qrImage = document.querySelector('.qr-code img');
+    if (qrImage) {
+        const link = document.createElement('a');
+        link.download = 'survey-qr-code.png';
+        link.href = qrImage.src;
+        link.click();
+    }
+}
+
+// Dashboard functions
+function loadDashboard() {
+    debug('Loading dashboard...');
+    initializeDemoData();
+    updateDashboardStats();
+    loadRecentSurveys();
+    updateUserDisplay();
+    debug('Dashboard loaded successfully');
+}
+
+function updateDashboardStats() {
+    debug('Updating dashboard stats...');
+    const userSurveys = surveys.filter(s => s.userId === currentUser?.id || s.userId === 'demo');
+    const totalResponses = userSurveys.reduce((sum, survey) => sum + (survey.responses?.length || 0), 0);
+    const avgRating = calculateAverageRating(userSurveys);
+    
+    debug(`Found ${userSurveys.length} surveys with ${totalResponses} total responses`);
+    
+    // Update stats
+    const statNumbers = document.querySelectorAll('.stat-number');
+    if (statNumbers.length >= 4) {
+        statNumbers[0].textContent = userSurveys.length;
+        statNumbers[1].textContent = totalResponses;
+        statNumbers[2].textContent = avgRating.toFixed(1);
+        statNumbers[3].textContent = '89%'; // Demo response rate
+        debug('Dashboard stats updated');
+    } else {
+        debug('Could not find stat numbers elements');
+    }
+}
+
+function loadRecentSurveys() {
+    debug('Loading recent surveys...');
     const surveysGrid = document.querySelector('.surveys-grid');
-    if (!surveysGrid) return;
+    if (!surveysGrid) {
+        debug('Could not find surveys grid');
+        return;
+    }
     
     surveysGrid.innerHTML = '';
     
-    surveys.forEach(survey => {
+    // Filter surveys by current user
+    const userSurveys = surveys.filter(s => s.userId === currentUser?.id || s.userId === 'demo');
+    
+    if (userSurveys.length === 0) {
+        surveysGrid.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <i class="fas fa-clipboard-list" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>No surveys yet. Create your first survey to get started!</p>
+            </div>
+        `;
+        debug('No surveys to display');
+        return;
+    }
+    
+    // Show recent surveys (up to 3)
+    const recentSurveys = userSurveys.slice(0, 3);
+    recentSurveys.forEach(survey => {
         const surveyCard = createSurveyCard(survey);
         surveysGrid.appendChild(surveyCard);
     });
+    debug(`Loaded ${recentSurveys.length} survey cards`);
 }
 
 function createSurveyCard(survey) {
+    debug(`Creating survey card for: ${survey.title}`);
     const card = document.createElement('div');
     card.className = 'survey-card';
     
@@ -567,14 +789,365 @@ function createSurveyCard(survey) {
 }
 
 function viewAnalytics(surveyId) {
+    debug(`Opening analytics for survey: ${surveyId}`);
     const survey = surveys.find(s => s.id === surveyId);
     if (!survey) {
+        debug('Survey not found');
         showNotification('Survey not found', 'error');
         return;
     }
     
-    // Redirect to analytics page
-    window.location.href = `analytics.html?id=${survey.id}`;
+    const responseCount = survey.responses ? survey.responses.length : 0;
+    const avgRating = calculateAverageRating([survey]);
+    
+    const analyticsHtml = `
+        <div style="text-align: center; padding: 20px;">
+            <h3>Survey Analytics</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                <div class="stat-card">
+                    <div class="stat-number">${responseCount}</div>
+                    <div class="stat-label">Total Responses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${avgRating.toFixed(1)}</div>
+                    <div class="stat-label">Average Rating</div>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="closeModal('analyticsModal')">Close</button>
+        </div>
+    `;
+    
+    showAnalyticsModal(analyticsHtml);
+    debug('Analytics modal opened successfully');
+}
+
+function calculateAverageRating(surveys) {
+    let totalRating = 0;
+    let ratingCount = 0;
+    
+    surveys.forEach(survey => {
+        if (survey.responses) {
+            survey.responses.forEach(response => {
+                Object.values(response.answers).forEach(answer => {
+                    if (typeof answer === 'string' && !isNaN(answer)) {
+                        totalRating += parseFloat(answer);
+                        ratingCount++;
+                    }
+                });
+            });
+        }
+    });
+    
+    return ratingCount > 0 ? totalRating / ratingCount : 0;
+}
+
+function showAnalyticsModal(content) {
+    const modal = document.createElement('div');
+    modal.className = 'modal show';
+    modal.id = 'analyticsModal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Analytics</h2>
+                <button class="modal-close" onclick="closeModal('analyticsModal')">&times;</button>
+            </div>
+            ${content}
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// Surveys page functions
+function loadSurveysPage() {
+    debug('Loading surveys page content...');
+    initializeDemoData();
+    const surveysGrid = document.querySelector('.surveys-grid');
+    if (!surveysGrid) {
+        debug('Could not find surveys grid on surveys page');
+        return;
+    }
+    
+    surveysGrid.innerHTML = '';
+    const userSurveys = surveys.filter(s => s.userId === currentUser?.id || s.userId === 'demo');
+    
+    if (userSurveys.length === 0) {
+        surveysGrid.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <i class="fas fa-clipboard-list" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>No surveys yet. Create your first survey to get started!</p>
+            </div>
+        `;
+        debug('No surveys to display on surveys page');
+        return;
+    }
+    
+    userSurveys.forEach(survey => {
+        const surveyCard = createSurveyCard(survey);
+        surveysGrid.appendChild(surveyCard);
+    });
+    debug(`Loaded ${userSurveys.length} survey cards on surveys page`);
+}
+
+// Analytics page functions
+function loadAnalyticsPage() {
+    debug('Loading analytics page content...');
+    initializeDemoData();
+    const analyticsContent = document.querySelector('.analytics-content');
+    if (!analyticsContent) {
+        debug('Could not find analytics content area');
+        return;
+    }
+    
+    const userSurveys = surveys.filter(s => s.userId === currentUser?.id || s.userId === 'demo');
+    const totalResponses = userSurveys.reduce((sum, survey) => sum + (survey.responses?.length || 0), 0);
+    const avgRating = calculateAverageRating(userSurveys);
+    
+    analyticsContent.innerHTML = `
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <h3>Overall Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">${userSurveys.length}</div>
+                        <div class="stat-label">Total Surveys</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${totalResponses}</div>
+                        <div class="stat-label">Total Responses</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${avgRating.toFixed(1)}</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analytics-card">
+                <h3>Recent Activity</h3>
+                <div class="activity-list">
+                    ${userSurveys.slice(0, 5).map(survey => `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">${survey.title}</div>
+                                <div class="activity-meta">${survey.responses?.length || 0} responses</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+    debug('Analytics page content loaded successfully');
+}
+
+// Responses page functions
+function loadResponsesPage() {
+    debug('Loading responses page content...');
+    initializeDemoData();
+    const responsesContent = document.querySelector('.responses-content');
+    if (!responsesContent) {
+        debug('Could not find responses content area');
+        return;
+    }
+    
+    const userSurveys = surveys.filter(s => s.userId === currentUser?.id || s.userId === 'demo');
+    const allResponses = [];
+    
+    userSurveys.forEach(survey => {
+        if (survey.responses) {
+            survey.responses.forEach(response => {
+                allResponses.push({
+                    ...response,
+                    surveyTitle: survey.title,
+                    surveyId: survey.id
+                });
+            });
+        }
+    });
+    
+    if (allResponses.length === 0) {
+        responsesContent.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>No responses yet. Share your surveys to start collecting feedback!</p>
+            </div>
+        `;
+        debug('No responses to display');
+        return;
+    }
+    
+    responsesContent.innerHTML = `
+        <div class="responses-list">
+            ${allResponses.map(response => `
+                <div class="response-card">
+                    <div class="response-header">
+                        <h4>${response.surveyTitle}</h4>
+                        <span class="response-date">${new Date(response.timestamp).toLocaleDateString()}</span>
+                    </div>
+                    <div class="response-answers">
+                        ${Object.entries(response.answers).map(([questionId, answer]) => `
+                            <div class="answer-item">
+                                <strong>Question:</strong> ${getQuestionText(response.surveyId, questionId)}
+                                <br>
+                                <strong>Answer:</strong> ${answer}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    debug(`Loaded ${allResponses.length} responses`);
+}
+
+function getQuestionText(surveyId, questionId) {
+    const survey = surveys.find(s => s.id === surveyId);
+    if (survey && survey.questions) {
+        const question = survey.questions.find(q => q.id === questionId);
+        return question ? question.text : 'Question';
+    }
+    return 'Question';
+}
+
+// QR Codes page functions
+function loadQRCodesPage() {
+    debug('Loading QR codes page content...');
+    initializeDemoData();
+    const qrContent = document.querySelector('.qr-content');
+    if (!qrContent) {
+        debug('Could not find QR content area');
+        return;
+    }
+    
+    const userSurveys = surveys.filter(s => s.userId === currentUser?.id || s.userId === 'demo');
+    
+    if (userSurveys.length === 0) {
+        qrContent.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <i class="fas fa-qrcode" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>No surveys to generate QR codes for. Create a survey first!</p>
+            </div>
+        `;
+        debug('No surveys for QR codes');
+        return;
+    }
+    
+    qrContent.innerHTML = `
+        <div class="qr-grid">
+            ${userSurveys.map(survey => {
+                const surveyUrl = `${window.location.origin}/survey.html?id=${survey.id}`;
+                const qrCodeUrl = generateQRCode(surveyUrl);
+                return `
+                    <div class="qr-card">
+                        <div class="qr-image">
+                            <img src="${qrCodeUrl}" alt="QR Code for ${survey.title}">
+                        </div>
+                        <div class="qr-info">
+                            <h4>${survey.title}</h4>
+                            <p>${survey.description || 'No description'}</p>
+                            <div class="qr-actions">
+                                <a href="${surveyUrl}" target="_blank" class="btn-action">View Survey</a>
+                                <button class="btn-download" onclick="downloadQR('${survey.id}')">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+    debug(`Loaded ${userSurveys.length} QR code cards`);
+}
+
+function downloadSpecificQR(surveyId) {
+    const survey = surveys.find(s => s.id === surveyId);
+    if (survey) {
+        const surveyUrl = `${window.location.origin}/survey.html?id=${survey.id}`;
+        const qrCodeUrl = generateQRCode(surveyUrl);
+        
+        const link = document.createElement('a');
+        link.download = `${survey.title}-qr-code.png`;
+        link.href = qrCodeUrl;
+        link.click();
+    }
+}
+
+// Settings page functions
+function loadSettingsPage() {
+    debug('Loading settings page content...');
+    const settingsContent = document.querySelector('.settings-content');
+    if (!settingsContent) {
+        debug('Could not find settings content area');
+        return;
+    }
+    
+    settingsContent.innerHTML = `
+        <div class="settings-grid">
+            <div class="settings-card">
+                <h3>Account Settings</h3>
+                <form class="settings-form">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" value="${currentUser?.email || 'user@example.com'}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-input" value="${currentUser?.name || 'Demo User'}">
+                    </div>
+                    <button type="submit" class="btn-primary-action">Update Profile</button>
+                </form>
+            </div>
+            
+            <div class="settings-card">
+                <h3>App Preferences</h3>
+                <div class="preferences">
+                    <div class="preference-item">
+                        <label class="preference-label">
+                            <input type="checkbox" checked> Email notifications
+                        </label>
+                    </div>
+                    <div class="preference-item">
+                        <label class="preference-label">
+                            <input type="checkbox" checked> Weekly reports
+                        </label>
+                    </div>
+                    <div class="preference-item">
+                        <label class="preference-label">
+                            <input type="checkbox"> Dark mode
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-card">
+                <h3>Data Management</h3>
+                <div class="data-actions">
+                    <button class="btn-action" onclick="exportData()">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                    <button class="btn-action" onclick="clearData()">
+                        <i class="fas fa-trash"></i> Clear All Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    debug('Settings page content loaded successfully');
+}
+
+function clearAllData() {
+    if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+        localStorage.clear();
+        showNotification('All data cleared successfully');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1000);
+    }
 }
 
 // Color picker functionality
@@ -604,8 +1177,11 @@ function loadSurveyEditor() {
     }
     
     // Load survey data into editor
-    document.getElementById('surveyTitle').value = currentSurvey.title;
-    document.getElementById('surveyDescription').value = currentSurvey.description;
+    const titleInput = document.getElementById('surveyTitle');
+    const descInput = document.getElementById('surveyDescription');
+    
+    if (titleInput) titleInput.value = currentSurvey.title;
+    if (descInput) descInput.value = currentSurvey.description;
     
     // Load questions
     loadQuestions();
@@ -619,7 +1195,7 @@ function addQuestion(type) {
         type: type,
         text: '',
         required: false,
-        options: type === 'multiple_choice' || type === 'radio' ? [''] : [],
+        options: type === 'multiple_choice' || type === 'radio' || type === 'checkbox' ? [''] : [],
         min: 1,
         max: 10
     };
@@ -643,6 +1219,16 @@ function loadQuestions() {
     
     questionsContainer.innerHTML = '';
     
+    if (currentSurvey.questions.length === 0) {
+        questionsContainer.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <i class="fas fa-plus-circle" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>Add questions from the sidebar to build your survey</p>
+            </div>
+        `;
+        return;
+    }
+    
     currentSurvey.questions.forEach((question, index) => {
         const questionElement = createQuestionElement(question, index);
         questionsContainer.appendChild(questionElement);
@@ -652,6 +1238,7 @@ function loadQuestions() {
 function createQuestionElement(question, index) {
     const div = document.createElement('div');
     div.className = 'question-item';
+    
     div.innerHTML = `
         <div class="question-header">
             <span class="question-number">Q${index + 1}</span>
@@ -696,7 +1283,7 @@ function getQuestionOptions(question) {
                     <input type="text" value="${option}" 
                            onchange="updateOption('${question.id}', ${index}, this.value)"
                            placeholder="Option ${index + 1}">
-                    <button type="button" onclick="removeOption('${question.id}', ${index})">
+                    <button type="button" class="btn-remove" onclick="removeOption('${question.id}', ${index})">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -764,8 +1351,11 @@ function updateOption(questionId, optionIndex, value) {
 function saveSurvey() {
     if (!currentSurvey) return;
     
-    currentSurvey.title = document.getElementById('surveyTitle').value;
-    currentSurvey.description = document.getElementById('surveyDescription').value;
+    const titleInput = document.getElementById('surveyTitle');
+    const descInput = document.getElementById('surveyDescription');
+    
+    if (titleInput) currentSurvey.title = titleInput.value;
+    if (descInput) currentSurvey.description = descInput.value;
     currentSurvey.status = 'active';
     
     // Update survey in array
@@ -811,8 +1401,11 @@ function loadSurvey() {
     document.documentElement.style.setProperty('--border-radius', survey.borderRadius);
     
     // Load survey content
-    document.getElementById('surveyTitle').textContent = survey.title;
-    document.getElementById('surveyDescription').textContent = survey.description;
+    const titleElement = document.getElementById('surveyTitle');
+    const descElement = document.getElementById('surveyDescription');
+    
+    if (titleElement) titleElement.textContent = survey.title;
+    if (descElement) descElement.textContent = survey.description;
     
     // Load questions
     loadSurveyQuestions(survey);
@@ -1017,63 +1610,8 @@ function toggleUserMenu() {
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
-    // Check authentication for protected pages
-    const protectedPages = ['dashboard.html', 'survey-editor.html'];
-    const currentPage = window.location.pathname.split('/').pop();
-    
-    if (protectedPages.includes(currentPage) && !currentUser) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Initialize color picker
-    initColorPicker();
-    
-    // Load surveys if on dashboard
-    if (document.querySelector('.surveys-grid')) {
-        loadSurveys();
-    }
-    
-    // Load survey editor if on editor page
-    if (window.location.pathname.includes('survey-editor.html')) {
-        loadSurveyEditor();
-    }
-    
-    // Load survey if on survey page
-    if (window.location.pathname.includes('survey.html')) {
-        loadSurvey();
-    }
-    
-    // Add form event listeners
-    const createForm = document.getElementById('createSurveyForm');
-    if (createForm) {
-        createForm.addEventListener('submit', createSurvey);
-    }
-    
-    const surveyForm = document.getElementById('surveyForm');
-    if (surveyForm) {
-        surveyForm.addEventListener('submit', submitSurvey);
-    }
-    
-    const signupForm = document.getElementById('signupForm');
-    if (signupForm) {
-        signupForm.addEventListener('submit', signUp);
-    }
-    
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', login);
-    }
-    
-    // Close modals when clicking outside
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('modal')) {
-            e.target.classList.remove('show');
-        }
-    });
-    
-    // Update user display
-    updateUserDisplay();
+    debug('DOM loaded, initializing app...');
+    loadPage();
 });
 
 function updateUserDisplay() {
@@ -1088,4 +1626,137 @@ function updateUserDisplay() {
             userName.textContent = currentUser.name;
         }
     }
+}
+
+// Page loading functions
+function loadPage() {
+    debug('Loading page...');
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    debug(`Current page: ${currentPage}`);
+    
+    switch (currentPage) {
+        case 'dashboard.html':
+            debug('Loading dashboard page...');
+            loadDashboard();
+            break;
+        case 'surveys.html':
+            debug('Loading surveys page...');
+            loadSurveysPage();
+            break;
+        case 'analytics.html':
+            debug('Loading analytics page...');
+            loadAnalyticsPage();
+            break;
+        case 'responses.html':
+            debug('Loading responses page...');
+            loadResponsesPage();
+            break;
+        case 'qrcodes.html':
+            debug('Loading QR codes page...');
+            loadQRCodesPage();
+            break;
+        case 'settings.html':
+            debug('Loading settings page...');
+            loadSettingsPage();
+            break;
+        case 'survey-editor.html':
+            debug('Loading survey editor page...');
+            loadSurveyEditor();
+            break;
+        case 'survey.html':
+            debug('Loading survey page...');
+            loadSurvey();
+            break;
+        default:
+            debug('Unknown page, checking for dashboard elements...');
+            // Check if we're on a dashboard page
+            if (document.querySelector('.dashboard')) {
+                debug('Found dashboard elements, loading dashboard...');
+                loadDashboard();
+            }
+            break;
+    }
+}
+
+// Missing functions
+function exportData() {
+    debug('Exporting data...');
+    const data = {
+        surveys: surveys,
+        user: currentUser,
+        exportDate: new Date().toISOString()
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'real-feedback-data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showNotification('Data exported successfully', 'success');
+}
+
+function clearData() {
+    debug('Clearing all data...');
+    if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+        localStorage.clear();
+        surveys = [];
+        currentUser = null;
+        showNotification('All data cleared', 'success');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1000);
+    }
+}
+
+function downloadQR(surveyId) {
+    debug(`Downloading QR code for survey: ${surveyId}`);
+    const survey = surveys.find(s => s.id === surveyId);
+    if (!survey) {
+        debug('Survey not found for QR download');
+        showNotification('Survey not found', 'error');
+        return;
+    }
+    
+    const surveyUrl = `${window.location.origin}/survey.html?id=${survey.id}`;
+    const qrCodeUrl = generateQRCode(surveyUrl);
+    
+    // Create a temporary link to download the QR code
+    const a = document.createElement('a');
+    a.href = qrCodeUrl;
+    a.download = `qr-code-${survey.title.replace(/\s+/g, '-').toLowerCase()}.png`;
+    a.click();
+    
+    showNotification('QR code downloaded successfully', 'success');
+}
+
+function showAnalyticsModal(content) {
+    debug('Showing analytics modal...');
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('analyticsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'analyticsModal';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Survey Analytics</h2>
+                    <button class="modal-close" onclick="closeModal('analyticsModal')">&times;</button>
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    const modalBody = modal.querySelector('.modal-body');
+    if (modalBody) {
+        modalBody.innerHTML = content;
+    }
+    
+    modal.classList.add('show');
+    debug('Analytics modal shown successfully');
 } 

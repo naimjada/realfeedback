@@ -7,89 +7,74 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .page-container {
-            min-height: 100vh;
-            background: var(--bg-light);
-            padding: 40px 20px;
-        }
-        
-        .content-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .page-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .page-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 10px;
-        }
-        
-        .page-subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-        
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: var(--gradient-primary);
-            color: white;
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-        
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .coming-soon {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-        
-        .coming-soon i {
-            font-size: 4rem;
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-        }
-    </style>
 </head>
 <body>
-    <div class="page-container">
-        <div class="content-wrapper">
-            <div class="page-header">
-                <h1 class="page-title">QR Code Management</h1>
-                <p class="page-subtitle">Generate and manage QR codes for your surveys</p>
+    <div class="dashboard">
+        <!-- Dashboard Header -->
+        <header class="dashboard-header">
+            <div class="dashboard-nav">
+                <div class="dashboard-logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Real Feedback</span>
+                </div>
+                
+                <div class="dashboard-actions">
+                    <button class="btn-create" onclick="openCreateModal()">
+                        <i class="fas fa-plus"></i>
+                        Create Survey
+                    </button>
+                    
+                    <div class="user-menu" onclick="toggleUserMenu()">
+                        <div class="user-avatar">
+                            <span class="user-name">U</span>
+                        </div>
+                        <span class="user-name">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                        
+                        <div class="user-dropdown">
+                            <a href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="coming-soon">
-                <i class="fas fa-qrcode"></i>
-                <h2>QR Code Management Coming Soon!</h2>
-                <p>This page will allow you to generate, customize, and download QR codes for all your surveys.</p>
-                <a href="dashboard.html" class="back-button">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to Dashboard
-                </a>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-container">
+            <div class="dashboard-grid">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <nav class="sidebar-nav">
+                        <ul>
+                            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                            <li><a href="surveys.html"><i class="fas fa-list"></i> Surveys</a></li>
+                            <li><a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                            <li><a href="responses.html"><i class="fas fa-users"></i> Responses</a></li>
+                            <li><a href="qrcodes.html" class="active"><i class="fas fa-qrcode"></i> QR Codes</a></li>
+                            <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="main-content">
+                    <div class="page-header">
+                        <h1 class="page-title">QR Codes</h1>
+                        <p class="page-subtitle">Generate and manage QR codes for your surveys</p>
+                    </div>
+
+                    <div class="qr-content">
+                        <!-- QR codes will be loaded dynamically by JavaScript -->
+                    </div>
+                </main>
             </div>
         </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

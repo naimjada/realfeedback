@@ -7,89 +7,169 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .page-container {
-            min-height: 100vh;
-            background: var(--bg-light);
-            padding: 40px 20px;
-        }
-        
-        .content-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .page-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .page-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 10px;
-        }
-        
-        .page-subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-        
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: var(--gradient-primary);
-            color: white;
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-        
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .coming-soon {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-        
-        .coming-soon i {
-            font-size: 4rem;
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-        }
-    </style>
 </head>
 <body>
-    <div class="page-container">
-        <div class="content-wrapper">
-            <div class="page-header">
-                <h1 class="page-title">Surveys Management</h1>
-                <p class="page-subtitle">Manage and monitor all your surveys in one place</p>
+    <div class="dashboard">
+        <!-- Dashboard Header -->
+        <header class="dashboard-header">
+            <div class="dashboard-nav">
+                <div class="dashboard-logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Real Feedback</span>
+                </div>
+                
+                <div class="dashboard-actions">
+                    <button class="btn-create" onclick="openCreateModal()">
+                        <i class="fas fa-plus"></i>
+                        Create Survey
+                    </button>
+                    
+                    <div class="user-menu" onclick="toggleUserMenu()">
+                        <div class="user-avatar">
+                            <span class="user-name">U</span>
+                        </div>
+                        <span class="user-name">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                        
+                        <div class="user-dropdown">
+                            <a href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="coming-soon">
-                <i class="fas fa-list"></i>
-                <h2>Surveys Management Coming Soon!</h2>
-                <p>This page will show all your surveys with advanced management features.</p>
-                <a href="dashboard.html" class="back-button">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to Dashboard
-                </a>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-container">
+            <div class="dashboard-grid">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <nav class="sidebar-nav">
+                        <ul>
+                            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                            <li><a href="surveys.html" class="active"><i class="fas fa-list"></i> Surveys</a></li>
+                            <li><a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                            <li><a href="responses.html"><i class="fas fa-users"></i> Responses</a></li>
+                            <li><a href="qrcodes.html"><i class="fas fa-qrcode"></i> QR Codes</a></li>
+                            <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="main-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Surveys</h1>
+                        <p class="page-subtitle">Manage and view all your surveys</p>
+                    </div>
+
+                    <div class="surveys-grid">
+                        <!-- Surveys will be loaded dynamically by JavaScript -->
+                    </div>
+                </main>
             </div>
         </div>
     </div>
+
+    <!-- Create Survey Modal -->
+    <div class="modal" id="createModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Survey</h2>
+                <button class="modal-close" onclick="closeModal('createModal')">&times;</button>
+            </div>
+            
+            <form id="createSurveyForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Survey Title</label>
+                        <input type="text" name="title" class="form-input" placeholder="Enter survey title" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-select">
+                            <option>Customer Satisfaction</option>
+                            <option>Product Feedback</option>
+                            <option>Employee Engagement</option>
+                            <option>Market Research</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-textarea" placeholder="Describe your survey"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Primary Color</label>
+                    <div class="color-picker">
+                        <div class="color-option active" style="background: #2563eb;" data-color="#2563eb"></div>
+                        <div class="color-option" style="background: #dc2626;" data-color="#dc2626"></div>
+                        <div class="color-option" style="background: #059669;" data-color="#059669"></div>
+                        <div class="color-option" style="background: #d97706;" data-color="#d97706"></div>
+                        <div class="color-option" style="background: #7c3aed;" data-color="#7c3aed"></div>
+                        <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Font Size</label>
+                    <select name="fontSize" class="form-select">
+                        <option value="14px">Small (14px)</option>
+                        <option value="16px" selected>Medium (16px)</option>
+                        <option value="18px">Large (18px)</option>
+                        <option value="20px">Extra Large (20px)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Border Radius</label>
+                    <select name="borderRadius" class="form-select">
+                        <option value="0px">None (0px)</option>
+                        <option value="4px">Small (4px)</option>
+                        <option value="8px" selected>Medium (8px)</option>
+                        <option value="12px">Large (12px)</option>
+                        <option value="16px">Extra Large (16px)</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px;">
+                    <button type="button" class="btn-action" onclick="closeModal('createModal')">Cancel</button>
+                    <button type="submit" class="btn-primary-action">Create Survey</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div class="modal" id="qrModal">
+        <div class="modal-content qr-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">QR Code</h2>
+                <button class="modal-close" onclick="closeModal('qrModal')">&times;</button>
+            </div>
+            
+            <div class="qr-code">
+                <img src="" alt="QR Code" style="width: 200px; height: 200px;">
+                <p>Scan to access the survey</p>
+            </div>
+            
+            <div class="qr-url">
+                <a href="#" class="survey-link" target="_blank">Survey Link</a>
+            </div>
+            
+            <button class="btn-download" onclick="downloadQR()">
+                <i class="fas fa-download"></i>
+                Download QR Code
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
