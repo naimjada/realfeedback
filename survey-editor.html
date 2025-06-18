@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Editor - Real Feedback</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .editor-container {
+            min-height: 100vh;
+            background: var(--bg-light);
+        }
+        
+        .editor-header {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .editor-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .editor-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        
+        .editor-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn-secondary {
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--text-primary);
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+        
+        .btn-primary {
+            padding: 10px 20px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .editor-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 25px;
+            height: fit-content;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .question-types {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .question-type {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .question-type:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+        
+        .main-editor {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .survey-info {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            min-height: 100px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+        
+        .questions-section h3 {
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        
+        .question-item {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            background: var(--bg-gray);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .question-number {
+            background: var(--primary-blue);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .question-type {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .btn-remove {
+            background: #dc2626;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+        
+        .btn-remove:hover {
+            background: #b91c1c;
+            transform: scale(1.1);
+        }
+        
+        .question-text {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        
+        .question-options {
+            margin-top: 15px;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .option-item input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+        }
+        
+        .btn-add-option {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-add-option:hover {
+            background: var(--primary-dark);
+        }
+        
+        .rating-options {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .rating-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .rating-options input {
+            width: 60px;
+            padding: 5px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px 20px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-left: 4px solid #059669;
+        }
+        
+        .notification.error {
+            border-left: 4px solid #dc2626;
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .editor-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+            
+            .main-editor {
+                order: 1;
+            }
+            
+            .editor-actions {
+                gap: 10px;
+            }
+            
+            .btn-secondary,
+            .btn-primary {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <!-- Editor Header -->
+        <header class="editor-header">
+            <div class="editor-nav">
+                <div class="editor-logo">
+                    <i class="fas fa-edit"></i>
+                    <span>Survey Editor</span>
+                </div>
+                
+                <div class="editor-actions">
+                    <button class="btn-secondary" onclick="saveSurvey()">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                    <button class="btn-secondary" onclick="previewSurvey()">
+                        <i class="fas fa-eye"></i> Preview
+                    </button>
+                    <a href="dashboard.html" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Editor Content -->
+        <div class="editor-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h3>Question Types</h3>
+                <div class="question-types">
+                    <div class="question-type" onclick="addQuestion('text')">
+                        <i class="fas fa-font"></i>
+                        <span>Text Input</span>
+                    </div>
+                    <div class="question-type" onclick="addQuestion('textarea')">
+                        <i class="fas fa-align-left"></i>
+                        <span>Long Text</span>
+                    </div>
+                    <div class="question-type" onclick="addQuestion('number')">
+                        <i class="fas fa-hashtag"></i>
+                        <span>Number</span>
+                    </div>
+                    <div class="question-type" onclick="addQuestion('email')">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email</span>
+                    </div>
+                    <div class="question-type" onclick="addQuestion('phone')">
+                        <i class="fas fa-phone"></i>
+                        <span>Phone</span>
+                    </div>
+                    <div class="question-type" onclick="addQuestion('rating')">
+                        <i class="fas fa-star"></i>
+                        <span>Rating</span>
+                    </div>
+                    <div class="question-type" onclick="addQuestion('nps')">
+                        <i class="fas fa-chart-line"></i>
+                        <span>NPS Score</span>
+                    </div>
+                    <div class="question-type" onclick="addQuestion('radio')">
+                        <i class="fas fa-dot-circle"></i>
+                        <span>Single Choice</span>
+                    </div>
+                    <div class="question-type" onclick="addQuestion('multiple_choice')">
+                        <i class="fas fa-check-square"></i>
+                        <span>Multiple Choice</span>
+                    </div>
+                    <div class="question-type" onclick="addQuestion('checkbox')">
+                        <i class="fas fa-list-check"></i>
+                        <span>Checkboxes</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Editor -->
+            <main class="main-editor">
+                <!-- Survey Info -->
+                <div class="survey-info">
+                    <div class="form-group">
+                        <label class="form-label">Survey Title</label>
+                        <input type="text" id="surveyTitle" class="form-input" placeholder="Enter survey title">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea id="surveyDescription" class="form-textarea" placeholder="Describe your survey"></textarea>
+                    </div>
+                </div>
+
+                <!-- Questions Section -->
+                <div class="questions-section">
+                    <h3>Questions</h3>
+                    <div id="questionsContainer">
+                        <!-- Questions will be loaded here -->
+                    </div>
+                    
+                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        <i class="fas fa-plus-circle" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>Add questions from the sidebar to build your survey</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

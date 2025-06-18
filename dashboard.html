@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Real Feedback</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .dashboard {
+            min-height: 100vh;
+            background: var(--bg-light);
+        }
+        
+        .dashboard-header {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .dashboard-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .dashboard-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        
+        .dashboard-logo i {
+            font-size: 1.8rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dashboard-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .btn-create {
+            padding: 12px 24px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-create:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .user-menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+        
+        .user-menu:hover {
+            background: var(--bg-gray);
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            height: fit-content;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+        
+        .sidebar-nav a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .page-header {
+            margin-bottom: 40px;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-blue);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .surveys-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .survey-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .survey-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-blue);
+        }
+        
+        .survey-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .survey-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+        
+        .survey-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-draft {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .survey-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .survey-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .survey-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-action {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: white;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-action:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary-action {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+        
+        .btn-primary-action:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .color-option.active {
+            border-color: var(--text-primary);
+            transform: scale(1.1);
+        }
+        
+        .qr-modal {
+            text-align: center;
+        }
+        
+        .qr-code {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            display: inline-block;
+            margin: 20px 0;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .qr-pattern {
+            width: 200px;
+            height: 200px;
+            background: repeating-linear-gradient(
+                0deg,
+                var(--text-primary) 0px,
+                var(--text-primary) 2px,
+                transparent 2px,
+                transparent 8px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                var(--text-primary) 0px,
+                var(--text-primary) 2px,
+                transparent 2px,
+                transparent 8px
+            );
+            border-radius: var(--border-radius);
+            margin: 0 auto 15px;
+        }
+        
+        .qr-url {
+            font-family: monospace;
+            background: var(--bg-gray);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            margin: 15px 0;
+            word-break: break-all;
+        }
+        
+        .btn-download {
+            padding: 12px 24px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .surveys-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-actions {
+                gap: 10px;
+            }
+            
+            .btn-create {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Dashboard Header -->
+        <header class="dashboard-header">
+            <div class="dashboard-nav">
+                <div class="dashboard-logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Real Feedback</span>
+                </div>
+                
+                <div class="dashboard-actions">
+                    <button class="btn-create" onclick="openCreateModal()">
+                        <i class="fas fa-plus"></i>
+                        Create Survey
+                    </button>
+                    
+                    <div class="user-menu" onclick="toggleUserMenu()">
+                        <div class="user-avatar">
+                            <span class="user-name">U</span>
+                        </div>
+                        <span class="user-name">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                        
+                        <div class="user-dropdown">
+                            <a href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-container">
+            <div class="dashboard-grid">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <nav class="sidebar-nav">
+                        <ul>
+                            <li><a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                            <li><a href="surveys.html"><i class="fas fa-list"></i> Surveys</a></li>
+                            <li><a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                            <li><a href="responses.html"><i class="fas fa-users"></i> Responses</a></li>
+                            <li><a href="qrcodes.html"><i class="fas fa-qrcode"></i> QR Codes</a></li>
+                            <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="main-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-subtitle">Welcome back! Here's an overview of your surveys and responses.</p>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Total Surveys</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-number">1,247</div>
+                            <div class="stat-label">Total Responses</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-number">8.7</div>
+                            <div class="stat-label">Avg. Rating</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-number">89%</div>
+                            <div class="stat-label">Response Rate</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Surveys -->
+                    <h2 style="margin-bottom: 20px; color: var(--text-primary);">Recent Surveys</h2>
+                    <div class="surveys-grid">
+                        <div class="survey-card">
+                            <div class="survey-header">
+                                <div>
+                                    <h3 class="survey-title">Customer Satisfaction Survey</h3>
+                                    <span class="survey-status status-active">Active</span>
+                                </div>
+                            </div>
+                            
+                            <div class="survey-meta">
+                                <span><i class="fas fa-calendar"></i> Created 2 days ago</span>
+                                <span><i class="fas fa-users"></i> 156 responses</span>
+                            </div>
+                            
+                            <div class="survey-actions">
+                                <a href="#" class="btn-action" onclick="viewQR('survey1')">
+                                    <i class="fas fa-qrcode"></i> QR Code
+                                </a>
+                                <a href="#" class="btn-action">
+                                    <i class="fas fa-chart-bar"></i> Analytics
+                                </a>
+                                <a href="#" class="btn-primary-action">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="survey-card">
+                            <div class="survey-header">
+                                <div>
+                                    <h3 class="survey-title">Product Feedback Form</h3>
+                                    <span class="survey-status status-active">Active</span>
+                                </div>
+                            </div>
+                            
+                            <div class="survey-meta">
+                                <span><i class="fas fa-calendar"></i> Created 1 week ago</span>
+                                <span><i class="fas fa-users"></i> 89 responses</span>
+                            </div>
+                            
+                            <div class="survey-actions">
+                                <a href="#" class="btn-action" onclick="viewQR('survey2')">
+                                    <i class="fas fa-qrcode"></i> QR Code
+                                </a>
+                                <a href="#" class="btn-action">
+                                    <i class="fas fa-chart-bar"></i> Analytics
+                                </a>
+                                <a href="#" class="btn-primary-action">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="survey-card">
+                            <div class="survey-header">
+                                <div>
+                                    <h3 class="survey-title">Employee Engagement Survey</h3>
+                                    <span class="survey-status status-draft">Draft</span>
+                                </div>
+                            </div>
+                            
+                            <div class="survey-meta">
+                                <span><i class="fas fa-calendar"></i> Created 3 days ago</span>
+                                <span><i class="fas fa-users"></i> 0 responses</span>
+                            </div>
+                            
+                            <div class="survey-actions">
+                                <a href="#" class="btn-action">
+                                    <i class="fas fa-eye"></i> Preview
+                                </a>
+                                <a href="#" class="btn-primary-action">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Survey Modal -->
+    <div class="modal" id="createModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Survey</h2>
+                <button class="modal-close" onclick="closeModal('createModal')">&times;</button>
+            </div>
+            
+            <form id="createSurveyForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Survey Title</label>
+                        <input type="text" name="title" class="form-input" placeholder="Enter survey title" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-select">
+                            <option>Customer Satisfaction</option>
+                            <option>Product Feedback</option>
+                            <option>Employee Engagement</option>
+                            <option>Market Research</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-textarea" placeholder="Describe your survey"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Primary Color</label>
+                    <div class="color-picker">
+                        <div class="color-option active" style="background: #2563eb;" data-color="#2563eb"></div>
+                        <div class="color-option" style="background: #dc2626;" data-color="#dc2626"></div>
+                        <div class="color-option" style="background: #059669;" data-color="#059669"></div>
+                        <div class="color-option" style="background: #d97706;" data-color="#d97706"></div>
+                        <div class="color-option" style="background: #7c3aed;" data-color="#7c3aed"></div>
+                        <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Font Size</label>
+                    <select name="fontSize" class="form-select">
+                        <option value="14px">Small (14px)</option>
+                        <option value="16px" selected>Medium (16px)</option>
+                        <option value="18px">Large (18px)</option>
+                        <option value="20px">Extra Large (20px)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Border Radius</label>
+                    <select name="borderRadius" class="form-select">
+                        <option value="0px">None (0px)</option>
+                        <option value="4px">Small (4px)</option>
+                        <option value="8px" selected>Medium (8px)</option>
+                        <option value="12px">Large (12px)</option>
+                        <option value="16px">Extra Large (16px)</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px;">
+                    <button type="button" class="btn-action" onclick="closeModal('createModal')">Cancel</button>
+                    <button type="submit" class="btn-primary-action">Create Survey</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div class="modal" id="qrModal">
+        <div class="modal-content qr-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">QR Code</h2>
+                <button class="modal-close" onclick="closeModal('qrModal')">&times;</button>
+            </div>
+            
+            <div class="qr-code">
+                <img src="" alt="QR Code" style="width: 200px; height: 200px;">
+                <p>Scan to access the survey</p>
+            </div>
+            
+            <div class="qr-url">
+                <a href="#" class="survey-link" target="_blank">Survey Link</a>
+            </div>
+            
+            <button class="btn-download" onclick="downloadQR()">
+                <i class="fas fa-download"></i>
+                Download QR Code
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
