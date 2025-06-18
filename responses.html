@@ -5,91 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responses - Real Feedback</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .page-container {
-            min-height: 100vh;
-            background: var(--bg-light);
-            padding: 40px 20px;
-        }
-        
-        .content-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .page-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .page-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 10px;
-        }
-        
-        .page-subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-        
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: var(--gradient-primary);
-            color: white;
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-        
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .coming-soon {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-        
-        .coming-soon i {
-            font-size: 4rem;
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-        }
-    </style>
 </head>
 <body>
-    <div class="page-container">
-        <div class="content-wrapper">
-            <div class="page-header">
-                <h1 class="page-title">Survey Responses</h1>
-                <p class="page-subtitle">View and manage all customer responses</p>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">Real Feedback</a>
+        <ul class="navbar-nav">
+            <li><a href="surveys.html" class="nav-link">Surveys</a></li>
+            <li><a href="analytics.html" class="nav-link">Analytics</a></li>
+            <li><a href="responses.html" class="nav-link">Responses</a></li>
+            <li><a href="qr-codes.html" class="nav-link">QR Codes</a></li>
+            <li><a href="settings.html" class="nav-link">Settings</a></li>
+            <li><a href="index.html" class="nav-link">Sign Out</a></li>
+        </ul>
+    </nav>
+
+    <!-- Responses Content -->
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <h1>Responses</h1>
+            <p>View and manage all customer feedback responses</p>
+        </div>
+
+        <!-- Response Stats -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-number">847</div>
+                <div class="stat-label">Total Responses</div>
             </div>
-            
-            <div class="coming-soon">
-                <i class="fas fa-users"></i>
-                <h2>Responses Management Coming Soon!</h2>
-                <p>This page will show all survey responses with filtering, search, and export capabilities.</p>
-                <a href="dashboard.html" class="back-button">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to Dashboard
-                </a>
+            <div class="stat-card">
+                <div class="stat-number">23</div>
+                <div class="stat-label">Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">156</div>
+                <div class="stat-label">This Week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">4.2</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+        </div>
+
+        <!-- Recent Responses -->
+        <div class="card">
+            <h3>Recent Responses</h3>
+            <div class="response-list">
+                <div class="response-item">
+                    <div class="response-header">
+                        <div class="response-rating">★★★★★</div>
+                        <div class="response-date">2 hours ago</div>
+                    </div>
+                    <div class="response-text">
+                        "Excellent service! The staff was very helpful and the product quality exceeded my expectations."
+                    </div>
+                    <div class="response-survey">Customer Satisfaction Survey</div>
+                </div>
+                
+                <div class="response-item">
+                    <div class="response-header">
+                        <div class="response-rating">★★★★☆</div>
+                        <div class="response-date">4 hours ago</div>
+                    </div>
+                    <div class="response-text">
+                        "Good experience overall. The delivery was a bit slow but the product was perfect."
+                    </div>
+                    <div class="response-survey">Product Feedback Survey</div>
+                </div>
+                
+                <div class="response-item">
+                    <div class="response-header">
+                        <div class="response-rating">★★★★★</div>
+                        <div class="response-date">6 hours ago</div>
+                    </div>
+                    <div class="response-text">
+                        "Amazing customer support! They resolved my issue quickly and professionally."
+                    </div>
+                    <div class="response-survey">Service Quality Survey</div>
+                </div>
             </div>
         </div>
     </div>
+
+    <style>
+        .response-list {
+            margin-top: 24px;
+        }
+        
+        .response-item {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--apple-border);
+        }
+        
+        .response-item:last-child {
+            border-bottom: none;
+        }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .response-rating {
+            color: #fbbf24;
+            font-size: 18px;
+        }
+        
+        .response-date {
+            color: var(--apple-gray);
+            font-size: 14px;
+        }
+        
+        .response-text {
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--apple-black);
+            margin-bottom: 8px;
+        }
+        
+        .response-survey {
+            color: var(--apple-blue);
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+
+    <script src="script.js"></script>
 </body>
 </html>

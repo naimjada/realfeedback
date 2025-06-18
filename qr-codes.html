@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Codes - Real Feedback</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">Real Feedback</a>
+        <ul class="navbar-nav">
+            <li><a href="surveys.html" class="nav-link">Surveys</a></li>
+            <li><a href="analytics.html" class="nav-link">Analytics</a></li>
+            <li><a href="responses.html" class="nav-link">Responses</a></li>
+            <li><a href="qr-codes.html" class="nav-link">QR Codes</a></li>
+            <li><a href="settings.html" class="nav-link">Settings</a></li>
+            <li><a href="index.html" class="nav-link">Sign Out</a></li>
+        </ul>
+    </nav>
+
+    <!-- QR Codes Content -->
+    <div class="qr-container">
+        <div class="text-center mb-8">
+            <h1>QR Codes</h1>
+            <p>Generate and manage QR codes for your surveys</p>
+        </div>
+
+        <!-- Generate New QR Code -->
+        <div class="card mb-8">
+            <h3>Generate New QR Code</h3>
+            <p>Create a QR code for any of your surveys to make feedback collection seamless.</p>
+            <a href="surveys.html" class="btn">Select Survey</a>
+        </div>
+
+        <!-- Existing QR Codes -->
+        <div class="qr-grid">
+            <div class="qr-card">
+                <div class="qr-code">
+                    <div class="qr-placeholder">QR Code</div>
+                    <h4>Customer Satisfaction Survey</h4>
+                    <p>Generated 2 days ago</p>
+                    <div class="qr-actions">
+                        <button class="btn btn-secondary">Download</button>
+                        <button class="btn">View Survey</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="qr-card">
+                <div class="qr-code">
+                    <div class="qr-placeholder">QR Code</div>
+                    <h4>Product Feedback Survey</h4>
+                    <p>Generated 1 week ago</p>
+                    <div class="qr-actions">
+                        <button class="btn btn-secondary">Download</button>
+                        <button class="btn">View Survey</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="qr-card">
+                <div class="qr-code">
+                    <div class="qr-placeholder">QR Code</div>
+                    <h4>Service Quality Survey</h4>
+                    <p>Generated 3 days ago</p>
+                    <div class="qr-actions">
+                        <button class="btn btn-secondary">Download</button>
+                        <button class="btn">View Survey</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+        
+        .qr-card {
+            background: var(--apple-white);
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 4px 16px var(--apple-shadow);
+            border: 1px solid var(--apple-border);
+            transition: all 0.3s ease;
+        }
+        
+        .qr-card:hover {
+            box-shadow: 0 8px 25px var(--apple-shadow-heavy);
+            transform: translateY(-2px);
+        }
+        
+        .qr-card h4 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 16px 0 8px;
+            color: var(--apple-black);
+        }
+        
+        .qr-card p {
+            color: var(--apple-gray);
+            margin-bottom: 24px;
+        }
+        
+        .qr-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .qr-actions .btn {
+            flex: 1;
+        }
+    </style>
+
+    <script src="script.js"></script>
+</body>
+</html> 

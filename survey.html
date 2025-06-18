@@ -3,273 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Survey - Real Feedback</title>
+    <title>Customer Feedback Survey - Real Feedback</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .survey-container {
-            min-height: 100vh;
-            background: var(--bg-light);
-            padding: 40px 20px;
-        }
-        
-        .survey-content {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .survey-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .survey-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 10px;
-        }
-        
-        .survey-description {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: var(--bg-gray);
-            border-radius: 3px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: var(--gradient-primary);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .question {
-            margin-bottom: 30px;
-            padding: 25px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background: var(--bg-gray);
-        }
-        
-        .question h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 15px;
-        }
-        
-        .question input,
-        .question textarea,
-        .question select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-        
-        .question input:focus,
-        .question textarea:focus,
-        .question select:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
-        
-        .question textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .rating-input,
-        .nps-input {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .rating-option,
-        .nps-option {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .rating-option input,
-        .nps-option input {
-            display: none;
-        }
-        
-        .rating-label,
-        .nps-label {
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--border-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .rating-option input:checked + .rating-label,
-        .nps-option input:checked + .nps-label {
-            background: var(--primary-blue);
-            color: white;
-            border-color: var(--primary-blue);
-        }
-        
-        .radio-input,
-        .checkbox-input,
-        .multiple-choice-input {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .radio-option,
-        .checkbox-option,
-        .choice-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .radio-option:hover,
-        .checkbox-option:hover,
-        .choice-option:hover {
-            border-color: var(--primary-blue);
-            background: var(--light-blue);
-        }
-        
-        .radio-option input,
-        .checkbox-option input,
-        .choice-option input {
-            width: auto;
-        }
-        
-        .submit-section {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .btn-submit {
-            padding: 15px 40px;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .thank-you {
-            text-align: center;
-            padding: 60px 20px;
-        }
-        
-        .thank-you i {
-            font-size: 4rem;
-            color: #059669;
-            margin-bottom: 20px;
-        }
-        
-        .thank-you h2 {
-            font-size: 2rem;
-            color: var(--text-primary);
-            margin-bottom: 15px;
-        }
-        
-        .thank-you p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        
-        @media (max-width: 768px) {
-            .survey-content {
-                padding: 20px;
-            }
-            
-            .survey-title {
-                font-size: 1.5rem;
-            }
-            
-            .question {
-                padding: 20px;
-            }
-            
-            .rating-input,
-            .nps-input {
-                gap: 5px;
-            }
-            
-            .rating-label,
-            .nps-label {
-                width: 35px;
-                height: 35px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
 </head>
 <body>
-    <div class="survey-container">
-        <div class="survey-content">
-            <div class="survey-header">
-                <h1 id="surveyTitle" class="survey-title">Loading Survey...</h1>
-                <p id="surveyDescription" class="survey-description">Please wait while we load your survey.</p>
-            </div>
-            
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-            
-            <form id="surveyForm">
-                <div id="questionsContainer">
-                    <!-- Questions will be loaded here -->
-                </div>
-                
-                <div class="submit-section">
-                    <button type="submit" class="btn-submit">
-                        <i class="fas fa-paper-plane"></i>
-                        Submit Survey
-                    </button>
-                </div>
-            </form>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">Real Feedback</a>
+        <ul class="navbar-nav">
+            <li><a href="surveys.html" class="nav-link">Surveys</a></li>
+            <li><a href="analytics.html" class="nav-link">Analytics</a></li>
+            <li><a href="responses.html" class="nav-link">Responses</a></li>
+            <li><a href="qr-codes.html" class="nav-link">QR Codes</a></li>
+            <li><a href="settings.html" class="nav-link">Settings</a></li>
+            <li><a href="index.html" class="nav-link">Sign Out</a></li>
+        </ul>
+    </nav>
+
+    <!-- Survey Form -->
+    <div class="survey-form">
+        <div class="text-center mb-8">
+            <h1>Customer Feedback Survey</h1>
+            <p>We value your feedback. Please take a moment to share your experience with us.</p>
         </div>
+
+        <form id="feedbackForm">
+            <!-- Question 1: Overall Satisfaction -->
+            <div class="survey-question">
+                <div class="question-text">How satisfied are you with our service overall?</div>
+                <div class="rating-scale">
+                    <button type="button" class="rating-btn" data-rating="1">1</button>
+                    <button type="button" class="rating-btn" data-rating="2">2</button>
+                    <button type="button" class="rating-btn" data-rating="3">3</button>
+                    <button type="button" class="rating-btn" data-rating="4">4</button>
+                    <button type="button" class="rating-btn" data-rating="5">5</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; color: var(--apple-gray); font-size: 14px;">
+                    <span>Very Dissatisfied</span>
+                    <span>Very Satisfied</span>
+                </div>
+            </div>
+
+            <!-- Question 2: NPS -->
+            <div class="survey-question">
+                <div class="question-text">How likely are you to recommend our service to a friend or colleague?</div>
+                <div class="rating-scale">
+                    <button type="button" class="rating-btn" data-rating="0">0</button>
+                    <button type="button" class="rating-btn" data-rating="1">1</button>
+                    <button type="button" class="rating-btn" data-rating="2">2</button>
+                    <button type="button" class="rating-btn" data-rating="3">3</button>
+                    <button type="button" class="rating-btn" data-rating="4">4</button>
+                    <button type="button" class="rating-btn" data-rating="5">5</button>
+                    <button type="button" class="rating-btn" data-rating="6">6</button>
+                    <button type="button" class="rating-btn" data-rating="7">7</button>
+                    <button type="button" class="rating-btn" data-rating="8">8</button>
+                    <button type="button" class="rating-btn" data-rating="9">9</button>
+                    <button type="button" class="rating-btn" data-rating="10">10</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; color: var(--apple-gray); font-size: 14px;">
+                    <span>Not at all likely</span>
+                    <span>Extremely likely</span>
+                </div>
+            </div>
+
+            <!-- Question 3: Product Quality -->
+            <div class="survey-question">
+                <div class="question-text">How would you rate the quality of our products?</div>
+                <div class="rating-scale">
+                    <button type="button" class="rating-btn" data-rating="1">1</button>
+                    <button type="button" class="rating-btn" data-rating="2">2</button>
+                    <button type="button" class="rating-btn" data-rating="3">3</button>
+                    <button type="button" class="rating-btn" data-rating="4">4</button>
+                    <button type="button" class="rating-btn" data-rating="5">5</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; color: var(--apple-gray); font-size: 14px;">
+                    <span>Poor</span>
+                    <span>Excellent</span>
+                </div>
+            </div>
+
+            <!-- Question 4: Customer Service -->
+            <div class="survey-question">
+                <div class="question-text">How would you rate our customer service?</div>
+                <div class="rating-scale">
+                    <button type="button" class="rating-btn" data-rating="1">1</button>
+                    <button type="button" class="rating-btn" data-rating="2">2</button>
+                    <button type="button" class="rating-btn" data-rating="3">3</button>
+                    <button type="button" class="rating-btn" data-rating="4">4</button>
+                    <button type="button" class="rating-btn" data-rating="5">5</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; color: var(--apple-gray); font-size: 14px;">
+                    <span>Poor</span>
+                    <span>Excellent</span>
+                </div>
+            </div>
+
+            <!-- Question 5: Open Feedback -->
+            <div class="survey-question">
+                <div class="question-text">Please share any additional comments or suggestions:</div>
+                <textarea class="form-input" rows="4" placeholder="Tell us more about your experience..."></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center" style="margin-top: 48px;">
+                <button type="submit" class="btn btn-large">Submit Feedback</button>
+            </div>
+        </form>
     </div>
 
     <script src="script.js"></script>

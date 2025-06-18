@@ -539,179 +539,71 @@
     </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">Real Feedback</a>
+        <ul class="navbar-nav">
+            <li><a href="surveys.html" class="nav-link">Surveys</a></li>
+            <li><a href="analytics.html" class="nav-link">Analytics</a></li>
+            <li><a href="responses.html" class="nav-link">Responses</a></li>
+            <li><a href="qr-codes.html" class="nav-link">QR Codes</a></li>
+            <li><a href="settings.html" class="nav-link">Settings</a></li>
+            <li><a href="index.html" class="nav-link">Sign Out</a></li>
+        </ul>
+    </nav>
+
+    <!-- Dashboard Content -->
     <div class="dashboard">
-        <!-- Dashboard Header -->
-        <header class="dashboard-header">
-            <div class="dashboard-nav">
-                <div class="dashboard-logo">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Real Feedback</span>
-                </div>
-                
-                <div class="dashboard-actions">
-                    <button class="btn-create" onclick="openCreateModal()">
-                        <i class="fas fa-plus"></i>
-                        Create Survey
-                    </button>
-                    
-                    <div class="user-menu" onclick="toggleUserMenu()">
-                        <div class="user-avatar">
-                            <span class="user-name">U</span>
-                        </div>
-                        <span class="user-name">User</span>
-                        <i class="fas fa-chevron-down"></i>
-                        
-                        <div class="user-dropdown">
-                            <a href="#" onclick="logout()">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </div>
-                </div>
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+            <p>Welcome back! Here's an overview of your feedback collection.</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Active Surveys</div>
             </div>
-        </header>
-
-        <!-- Dashboard Content -->
-        <div class="dashboard-container">
-            <div class="dashboard-grid">
-                <!-- Sidebar -->
-                <aside class="sidebar">
-                    <nav class="sidebar-nav">
-                        <ul>
-                            <li><a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
-                            <li><a href="surveys.html"><i class="fas fa-list"></i> Surveys</a></li>
-                            <li><a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
-                            <li><a href="responses.html"><i class="fas fa-users"></i> Responses</a></li>
-                            <li><a href="qrcodes.html"><i class="fas fa-qrcode"></i> QR Codes</a></li>
-                            <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
-                            <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                        </ul>
-                    </nav>
-                </aside>
-
-                <!-- Main Content -->
-                <main class="main-content">
-                    <div class="page-header">
-                        <h1 class="page-title">Dashboard</h1>
-                        <p class="page-subtitle">Welcome back! Here's an overview of your surveys and responses.</p>
-                    </div>
-
-                    <!-- Stats Grid -->
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-clipboard-list"></i>
-                            </div>
-                            <div class="stat-number">12</div>
-                            <div class="stat-label">Total Surveys</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="stat-number">1,247</div>
-                            <div class="stat-label">Total Responses</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <div class="stat-number">8.7</div>
-                            <div class="stat-label">Avg. Rating</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-eye"></i>
-                            </div>
-                            <div class="stat-number">89%</div>
-                            <div class="stat-label">Response Rate</div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Surveys -->
-                    <h2 style="margin-bottom: 20px; color: var(--text-primary);">Recent Surveys</h2>
-                    <div class="surveys-grid">
-                        <div class="survey-card">
-                            <div class="survey-header">
-                                <div>
-                                    <h3 class="survey-title">Customer Satisfaction Survey</h3>
-                                    <span class="survey-status status-active">Active</span>
-                                </div>
-                            </div>
-                            
-                            <div class="survey-meta">
-                                <span><i class="fas fa-calendar"></i> Created 2 days ago</span>
-                                <span><i class="fas fa-users"></i> 156 responses</span>
-                            </div>
-                            
-                            <div class="survey-actions">
-                                <a href="#" class="btn-action" onclick="viewQR('survey1')">
-                                    <i class="fas fa-qrcode"></i> QR Code
-                                </a>
-                                <a href="#" class="btn-action">
-                                    <i class="fas fa-chart-bar"></i> Analytics
-                                </a>
-                                <a href="#" class="btn-primary-action">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="survey-card">
-                            <div class="survey-header">
-                                <div>
-                                    <h3 class="survey-title">Product Feedback Form</h3>
-                                    <span class="survey-status status-active">Active</span>
-                                </div>
-                            </div>
-                            
-                            <div class="survey-meta">
-                                <span><i class="fas fa-calendar"></i> Created 1 week ago</span>
-                                <span><i class="fas fa-users"></i> 89 responses</span>
-                            </div>
-                            
-                            <div class="survey-actions">
-                                <a href="#" class="btn-action" onclick="viewQR('survey2')">
-                                    <i class="fas fa-qrcode"></i> QR Code
-                                </a>
-                                <a href="#" class="btn-action">
-                                    <i class="fas fa-chart-bar"></i> Analytics
-                                </a>
-                                <a href="#" class="btn-primary-action">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="survey-card">
-                            <div class="survey-header">
-                                <div>
-                                    <h3 class="survey-title">Employee Engagement Survey</h3>
-                                    <span class="survey-status status-draft">Draft</span>
-                                </div>
-                            </div>
-                            
-                            <div class="survey-meta">
-                                <span><i class="fas fa-calendar"></i> Created 3 days ago</span>
-                                <span><i class="fas fa-users"></i> 0 responses</span>
-                            </div>
-                            
-                            <div class="survey-actions">
-                                <a href="#" class="btn-action">
-                                    <i class="fas fa-eye"></i> Preview
-                                </a>
-                                <a href="#" class="btn-primary-action">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </main>
+            <div class="stat-card">
+                <div class="stat-number">847</div>
+                <div class="stat-label">Total Responses</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-number">4.2</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">89%</div>
+                <div class="stat-label">Satisfaction Rate</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="dashboard-grid">
+            <a href="surveys.html" class="dashboard-card">
+                <h3>Create Survey</h3>
+                <p>Design a new customer feedback survey with customizable questions and branding.</p>
+                <div class="btn">Get Started</div>
+            </a>
+            
+            <a href="qr-codes.html" class="dashboard-card">
+                <h3>Generate QR Code</h3>
+                <p>Create QR codes for your surveys to make feedback collection seamless.</p>
+                <div class="btn">Create QR Code</div>
+            </a>
+            
+            <a href="analytics.html" class="dashboard-card">
+                <h3>View Analytics</h3>
+                <p>Analyze your feedback data with detailed charts and insights.</p>
+                <div class="btn">View Reports</div>
+            </a>
+            
+            <a href="responses.html" class="dashboard-card">
+                <h3>Recent Responses</h3>
+                <p>See the latest customer feedback and manage your response data.</p>
+                <div class="btn">View Responses</div>
+            </a>
         </div>
     </div>
 

@@ -5,91 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - Real Feedback</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .page-container {
-            min-height: 100vh;
-            background: var(--bg-light);
-            padding: 40px 20px;
-        }
-        
-        .content-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .page-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .page-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 10px;
-        }
-        
-        .page-subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-        
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: var(--gradient-primary);
-            color: white;
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-        
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .coming-soon {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-        
-        .coming-soon i {
-            font-size: 4rem;
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-        }
-    </style>
 </head>
 <body>
-    <div class="page-container">
-        <div class="content-wrapper">
-            <div class="page-header">
-                <h1 class="page-title">Account Settings</h1>
-                <p class="page-subtitle">Manage your account preferences and settings</p>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">Real Feedback</a>
+        <ul class="navbar-nav">
+            <li><a href="surveys.html" class="nav-link">Surveys</a></li>
+            <li><a href="analytics.html" class="nav-link">Analytics</a></li>
+            <li><a href="responses.html" class="nav-link">Responses</a></li>
+            <li><a href="qr-codes.html" class="nav-link">QR Codes</a></li>
+            <li><a href="settings.html" class="nav-link">Settings</a></li>
+            <li><a href="index.html" class="nav-link">Sign Out</a></li>
+        </ul>
+    </nav>
+
+    <!-- Settings Content -->
+    <div class="settings">
+        <div class="text-center mb-8">
+            <h1>Settings</h1>
+            <p>Manage your account preferences and settings</p>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="settings-section">
+            <h3>Account</h3>
+            <div class="setting-item">
+                <div class="setting-label">Full Name</div>
+                <div>John Doe</div>
             </div>
-            
-            <div class="coming-soon">
-                <i class="fas fa-cog"></i>
-                <h2>Settings Coming Soon!</h2>
-                <p>This page will allow you to manage your account settings, preferences, and profile information.</p>
-                <a href="dashboard.html" class="back-button">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to Dashboard
-                </a>
+            <div class="setting-item">
+                <div class="setting-label">Email Address</div>
+                <div>john.doe@example.com</div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">Account Type</div>
+                <div>Business</div>
+            </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="settings-section">
+            <h3>Notifications</h3>
+            <div class="setting-item">
+                <div class="setting-label">Email Notifications</div>
+                <div class="toggle active"></div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">New Response Alerts</div>
+                <div class="toggle active"></div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">Weekly Reports</div>
+                <div class="toggle"></div>
+            </div>
+        </div>
+
+        <!-- Survey Settings -->
+        <div class="settings-section">
+            <h3>Survey Preferences</h3>
+            <div class="setting-item">
+                <div class="setting-label">Default Theme</div>
+                <div>Light</div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">Auto-save Drafts</div>
+                <div class="toggle active"></div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">Require Email</div>
+                <div class="toggle"></div>
+            </div>
+        </div>
+
+        <!-- Data & Privacy -->
+        <div class="settings-section">
+            <h3>Data & Privacy</h3>
+            <div class="setting-item">
+                <div class="setting-label">Data Retention</div>
+                <div>2 years</div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">Export Data</div>
+                <button class="btn btn-secondary">Export</button>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">Delete Account</div>
+                <button class="btn btn-secondary" style="color: #ef4444; border-color: #ef4444;">Delete</button>
             </div>
         </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
